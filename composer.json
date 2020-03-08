@@ -4,10 +4,13 @@
     "type": "library",
     "authors": [
         {
-            "name": "awttech",
+            "name": "AWT Technology",
             "email": "info@awt.technology"
         }
     ],
+    {
+        "license": "MIT"
+    },
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.0.0",
