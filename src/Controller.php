@@ -17,7 +17,7 @@ abstract class Controller extends Runner
     {
         foreach ($frameworkRunner->getObjectsForController() as $type => $obj)
         {
-            $this->$type =& $obj;
+            $this->$type = $obj;
         }
         
         $this->init();
