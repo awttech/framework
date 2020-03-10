@@ -25,12 +25,12 @@ abstract class Runner
     /**
      * @var string $pageTemplate Path to the Page Template
      */
-    private $pageTemplate;
+    protected $pageTemplate;
     
     /**
      * @var string $pageTemplate Path to the Layout Template
      */
-    private $layoutTemplate;
+    protected $layoutTemplate;
     
     /**
      * @var array $routeParams Parsed URL Arguments
@@ -237,13 +237,13 @@ abstract class Runner
         $response = call_user_func_array([$object, $callback.'_'.strtolower($httpMethod)], $method_args);
         
         // Place in Layout Template
-        if (!empty($this->layoutTemplate)) {
-            $response = $this->template->loadTemplate($this->layoutTemplate, ['content'=>$response]);
+        if (!empty($object->layoutTemplate)) {
+            $response = $this->template->loadTemplate($object->layoutTemplate, ['content'=>$response]);
         }
         
         // Place in Page Template
-        if (!empty($this->pageTemplate)) {
-            $response = $this->template->loadTemplate($this->pageTemplate, ['content'=>$response]);
+        if (!empty($object->pageTemplate)) {
+            $response = $this->template->loadTemplate($object->pageTemplate, ['content'=>$response]);
         }
         
         echo $response;
@@ -343,8 +343,8 @@ abstract class Runner
      */
     protected function setStatusCode($statusCode)
     {
-        if (isset(self::$httpCodes[$status])) {
-            header(sprintf("HTTP/1.0 %s", self::$httpCodes[$status]));
+        if (isset(self::$httpCodes[$statusCode])) {
+            header(sprintf("HTTP/1.0 %s", self::$httpCodes[$statusCode]));
         }
     }
     
@@ -355,6 +355,7 @@ abstract class Runner
     protected function setPageTemplate($template)
     {
         $this->pageTemplate = $template;
+        $this->setControllerObject('pageTemplate', $template);
     }
     
     /**
@@ -364,6 +365,7 @@ abstract class Runner
     protected function setLayoutTemplate($template)
     {
         $this->layoutTemplate = $template;
+        $this->setControllerObject('layoutTemplate', $template);
     }
     
     /**

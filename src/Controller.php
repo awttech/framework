@@ -24,7 +24,7 @@ abstract class Controller extends Runner
     }
     
     /**
-     *
+     * Pseudo Constructor after loading Controller
      */
-    public function init() {}
+    protected function init() {}
 }
