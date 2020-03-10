@@ -33,6 +33,11 @@ abstract class Runner
     private $layoutTemplate;
     
     /**
+     * @var array $routeParams Parsed URL Arguments
+     */
+    protected $routeParams = [];
+    
+    /**
      * @var array $objectsForController Objects to Pass to Controllers
      */
     protected $objectsForController = [];
@@ -189,14 +194,16 @@ abstract class Runner
         
         // Fetch Route Info
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
+        list($dispatchResult, $handler, $routeParams) = $routeInfo;
         
-        switch ($routeInfo[0]) {
+        switch ($dispatchResult) {
             case \FastRoute\Dispatcher::FOUND:
+                $this->routeParams = $routeParams;
                 // First Run Access Checks
-                if (!empty($routeInfo[1]['accesschecks'])) {
-                    $this->runAccessChecks($routeInfo[1]['accesschecks']);
+                if (!empty($handler['accesschecks'])) {
+                    $this->runAccessChecks($handler['accesschecks']);
                 }
-                $this->runCallback($httpMethod, $routeInfo[1]['callback'], $routeInfo[2]);
+                $this->runCallback($httpMethod, $handler['callback'], $routeParams);
                 break;
             case \FastRoute\Dispatcher::NOT_FOUND:
                 return $this->showPageNotFound();
