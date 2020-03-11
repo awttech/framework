@@ -194,7 +194,7 @@ abstract class Runner
         
         // Fetch Route Info
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
-        list($dispatchResult, $handler, $routeParams) = $routeInfo;
+        list($dispatchResult, $handler, $routeParams) = array_pad($routeInfo, 3, NULL);
         
         switch ($dispatchResult) {
             case \FastRoute\Dispatcher::FOUND:
@@ -234,19 +234,30 @@ abstract class Runner
         }
         
         // Get Response
-        $response = call_user_func_array([$object, $callback.'_'.strtolower($httpMethod)], $method_args);
+        $content = call_user_func_array([$object, $callback.'_'.strtolower($httpMethod)], $method_args);
         
+        return $this->renderContent($content, $object->layoutTemplate, $object->pageTemplate);
+    }
+    
+    /**
+     * Method to Render Content with Layout and Page Template
+     * @param string $content Content
+     * @param string $layoutTemplate Layout Template
+     * @param string $pageTemplate Page Template
+     */
+    protected function renderContent($content, $layoutTemplate=NULL, $pageTemplate=NULL)
+    {
         // Place in Layout Template
-        if (!empty($object->layoutTemplate)) {
-            $response = $this->template->loadTemplate($object->layoutTemplate, ['content'=>$response]);
+        if (!empty($layoutTemplate)) {
+            $content = $this->template->loadTemplate($layoutTemplate, ['content'=>$content]);
         }
         
         // Place in Page Template
-        if (!empty($object->pageTemplate)) {
-            $response = $this->template->loadTemplate($object->pageTemplate, ['content'=>$response]);
+        if (!empty($pageTemplate)) {
+            $content = $this->template->loadTemplate($pageTemplate, ['content'=>$content]);
         }
         
-        echo $response;
+        echo $content;
     }
     
     /**
@@ -310,7 +321,7 @@ abstract class Runner
     /**
      * Show Page Not Found
      */
-    public function showPageNotFound()
+    protected function showPageNotFound()
     {
         die('Page Not Found');
     }
@@ -318,7 +329,7 @@ abstract class Runner
     /**
      * Show Method Not Found
      */
-    public function showMethodNotFound()
+    protected function showMethodNotFound()
     {
         return $this->showPageNotFound();
     }
