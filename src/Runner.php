@@ -164,13 +164,13 @@ abstract class Runner
             foreach ($methods as $method) {
                 $this->routes[] = ['method' => strtoupper($method), 'route_pattern'=>$route_pattern, 'handler'=>['callback'=>$callback, 'accesschecks'=>$accessChecks]];
             }
-            
-            $this->dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r)  {
-                foreach ($this->routes as $route) {
-                    $r->addRoute($route['method'], $route['route_pattern'], $route['handler']);
-                }
-            });
         }
+        
+        $this->dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $r)  {
+            foreach ($this->routes as $route) {
+                $r->addRoute($route['method'], $route['route_pattern'], $route['handler']);
+            }
+        });
     }
     
     /**
