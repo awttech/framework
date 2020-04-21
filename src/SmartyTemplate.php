@@ -59,6 +59,19 @@ class SmartyTemplate implements TemplateInterface
     }
     
     /**
+     * Method to append a value to the Persisted List
+     * @param string $name Name of the Item
+     * @param mixed $value Value of the Item (Can be string or object)
+     */
+    public function appendPersistVar($name, $value)
+    {
+        if (!isset($this->persistedVars[$name])) {
+            $this->persistedVars[$name] = '';
+        }
+        $this->persistedVars[$name] .= $value;
+    }
+    
+    /**
      * Method to load a template
      * @param string $template Path to the Template
      * @param array $vars Optional list of variables to send to template
