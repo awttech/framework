@@ -234,7 +234,7 @@ abstract class Runner
         }
         
         // Get Response
-        $content = call_user_func_array([$object, $callback.'_'.strtolower($httpMethod)], $method_args);
+        $content = call_user_func_array([$object, $callback.'_'.strtolower($httpMethod)], array_values($method_args));
         
         return $this->renderContent($content, $object->layoutTemplate, $object->pageTemplate);
     }
